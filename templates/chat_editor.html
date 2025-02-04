@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Flask App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/chat_editor_style.css">
+</head>
+<body>
+    <div class="container-one">
+        <h2>Chat Editor</h2>
+        <div class="container container-two">
+            <select id="entry-selector">
+                <option value="" disabled selected>Select an entry</option>
+            </select>
+        </div>
+        <div class="container-three">
+            <form id="entry-form">
+                <!-- Scrollbarer Bereich -->
+                <div class="scrollable-container">
+                    <!-- Dynamische Felder basierend auf Schema -->
+                    {% for field, definition in schema.items() %}
+                        <label for="{{ field }}">{{ field.capitalize() }}:</label>
+                        {% if "TEXT" in definition %}
+                            <textarea id="{{ field }}" name="{{ field }}" required></textarea>
+                        {% else %}
+                            <input type="text" id="{{ field }}" name="{{ field }}" required>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <!-- Buttons -->
+                <button type="submit">Save</button>
+                <button id="delete-button">Delete Selected Entry</button>
+                <button class="back-button" onclick="window.location.href='/settings'">Back</button>
+            </form>
+        </div>
+    </div>
+    <script src="/static/chat_editor_script.js"></script>
+</body>
+</html>

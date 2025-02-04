@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        /* Gesamtes Layout */
+        body {            
+            height: 95vh;          /* Vollbildhöhe */
+            margin: 5px; 
+            font-family: 'Lobster', cursive;
+            background-color: #f5f5f5;
+            padding: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container */
+        .container-one {
+            width: 90%;
+            height: 90%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgb(176, 183, 247); /* Gleiche Farbe wie die Hauptseite */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center; 
+        }
+        .container-two {
+            padding: 10px;
+            margin-bottom: 10px;                      
+            background-color: rgb(129, 141, 245);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc; 
+        }
+
+        .container-three {
+            margin-bottom: 10px;                      
+            background-color: rgb(129, 141, 245);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc; 
+        }
+
+        /* Abschnitt */
+        .section {
+            margin-bottom: 10px;
+        }
+
+        /* Textfeld und Buttons nebeneinander */
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 100%; /* Volle Breite des Containers */
+            padding: 10px;
+            margin: 0px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Verhindert, dass Padding die Breite verändert */
+        }
+
+        /* Einstellungs-Icon */
+        .settings-icon {
+            position: absolute; /* Positioniert das Icon relativ zum Container */
+            top: 15px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .settings-icon button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Überschrift */
+        h2 {
+            font-family: 'Lobster', sans-serif; /* Coole Schriftart */
+            font-size: 28px;
+            text-align: center; /* Zentriert die Überschrift */
+            flex-grow: 1; /* Lässt die Überschrift den verfügbaren Platz einnehmen */
+            color: white;
+        }
+
+        video {
+            width: 100%; /* Video nimmt die gesamte Breite des Containers ein */
+            height: auto; /* Höhe wird automatisch basierend auf dem Seitenverhältnis angepasst */
+            border: 1px solid #ccc;            
+            border-radius: 5px;
+        }
+
+        button {
+            flex: 1; /* Teilt die Breite gleichmäßig auf */
+            padding: 10px;
+            margin: 5px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Ergebnisbereich */
+        #resultOutput {
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            word-wrap: break-word;
+            height: 90px;  /* Höhe für 3 Zeilen */
+            overflow-y: auto; /* Vertikales Scrollen bei zu viel Text */
+            resize: none; /* Verhindert das manuelle Ändern der Größe */
+        }
+    </style>
+</head>
+<body>
+    <div class="container container-one">
+        <!-- Text-Eingabe -->
+        <div class="section">
+            <div class="container container-three">
+                <div class="input-group"> 
+                    <h2>Voice Assistant</h2>
+                    <!-- Einstellungen-Icon -->
+                    <div class="settings-icon">
+                        <button onclick="window.location.href='/settings'">⚙️</button>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <video id="myVideo" width="640" height="360" muted>
+                    <source src="/static/Frau.mp4" type="video/mp4">
+                    Ihr Browser unterstützt dieses Video-Format nicht.
+                </video>
+            </div>
+            <div class="container container-two">
+                <div class="section">
+                    <input type="text" id="ttsInput" placeholder="Text hier eingeben">
+                </div>
+                
+                <div class="input-group">                
+                    <button onclick="sendTextToBackend()">Senden</button>
+                    <button onclick="startRecognition()">Spracheingabe</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ergebnisanzeige -->
+        <div class="section">            
+            <p id="resultOutput">Das Ergebnis erscheint hier.</p>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById("myVideo");
+
+        async function pollServer() {
+            try {
+                const response = await fetch("/control", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ command: "status" }) // Dummy-Request für Verbindung
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const command = data.command;
+
+                    if (command === "play") {
+                        video.play();
+                    } else if (command === "pause") {
+                        video.pause();
+                    } else if (command === "reset") {
+                        video.pause();
+                        video.currentTime = 0;
+                    }
+                }
+            } catch (error) {
+                console.error("Fehler beim Abrufen der Befehle:", error);
+            }
+
+            setTimeout(pollServer, 1000); // Poll alle 1 Sekunde
+        }
+
+        pollServer(); // Starte Polling bei Seitenaufruf
+
+        function sendTextToBackend() {
+            const text = document.getElementById("ttsInput").value;
+
+            // Text an das Backend senden
+            fetch("/process", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ type: "text", content: text }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Ergebnis anzeigen
+                    document.getElementById("resultOutput").textContent = data.processed;
+
+                    // Ergebnis vorlesen
+                    const utterance = new SpeechSynthesisUtterance(data.processed);
+                    utterance.onend = function() {
+                        // Wenn das Sprechen beendet ist, stoppe das Video und setze es zurück
+                        video.pause();
+                        video.currentTime = 0;
+                    };
+                    speechSynthesis.speak(utterance);
+
+                    // Wenn der Server das Flag zum Abspielen des Videos zurückgibt
+                    if (data.play_video) {
+                        video.play();  // Video abspielen
+                    }
+                })
+                .catch((error) => {
+                    console.error("Fehler beim Senden des Texts:", error);
+                });
+        }
+
+        function startRecognition() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "de-DE";
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+
+                // Spracheingabe an das Backend senden
+                fetch("/process", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ type: "speech", content: transcript }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Ergebnis anzeigen
+                        document.getElementById("resultOutput").textContent = data.processed;
+
+                        // Ergebnis vorlesen
+                        const utterance = new SpeechSynthesisUtterance(data.processed);
+                        utterance.onend = function() {
+                            // Wenn das Sprechen beendet ist, stoppe das Video und setze es zurück
+                            video.pause();
+                            video.currentTime = 0;
+                        };
+                        speechSynthesis.speak(utterance);
+
+                        // Wenn der Server das Flag zum Abspielen des Videos zurückgibt
+                        if (data.play_video) {
+                            video.play();  // Video abspielen
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Fehler beim Senden der Sprache:", error);
+                    });
+            };
+
+            recognition.onerror = function(event) {
+                console.error("Fehler: ", event.error);
+            };
+
+            recognition.start();
+        }
+
+    </script>
+</body>
+</html>
+``
