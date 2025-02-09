@@ -6,11 +6,16 @@ Early Development / Beta Features
 **Entwicklungszeitraum:**  
 seit November 2024 
 
+⚠️ **Achtung:** Bei der Nutzung von Hugging Chat kann es gerade zu folgenden serverseitigen Störungen kommen:
+- Fehler "Model overloaded"
+- Langsame Antworten durch volle Server
+- Chat bricht manchmal ab
+
 ## Technologien
 
 - **Python:** Hauptprogrammiersprache für eine flexible und leistungsstarke Implementierung.  
 - **HTML, CSS, JavaScript:** Umsetzung als responsive Web-App und Nutzung von STT- und TTS-Systemen der Browser.  
-- **HuggingChat:** Integration moderner Sprachmodelle über die Soulter-API.  
+- **HugChat:** Integration moderner Sprachmodelle über die Soulter-API.  
 - **SQLite3:** Leichtgewichtige relationale Datenbankanbindung zur Speicherung von App-Daten.  
 
 ---
