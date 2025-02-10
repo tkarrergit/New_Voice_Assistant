@@ -27,6 +27,9 @@
             background-color: rgb(176, 183, 247); /* Gleiche Farbe wie die Hauptseite */
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center; 
         }
         .container-two {
@@ -36,6 +39,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border: 1px solid #ccc; 
+            
         }
 
         .container-three {
@@ -44,11 +48,15 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border: 1px solid #ccc; 
+            flex: auto;
+            
         }
 
+        
         /* Abschnitt */
         .section {
             margin-bottom: 10px;
+            
         }
 
         /* Textfeld und Buttons nebeneinander */
@@ -69,9 +77,9 @@
 
         /* Einstellungs-Icon */
         .settings-icon {
-            position: absolute; /* Positioniert das Icon relativ zum Container */
+            /*position: absolute; /* Positioniert das Icon relativ zum Container 
             top: 15px;
-            right: 15px;
+            right: 15px;*/
             font-size: 20px;
             cursor: pointer;
         }
@@ -131,7 +139,7 @@
 <body>
     <div class="container container-one">
         <!-- Text-Eingabe -->
-        <div class="section">
+        <div class="container-four">
             <div class="container container-three">
                 <div class="input-group"> 
                     <h2>Voice Assistant</h2>
@@ -156,13 +164,14 @@
                     <button onclick="sendTextToBackend()">Senden</button>
                     <button onclick="startRecognition()">Spracheingabe</button>
                 </div>
+                <div class="section">            
+                    <p id="resultOutput">Das Ergebnis erscheint hier.</p>
+                </div>
             </div>
         </div>
 
         <!-- Ergebnisanzeige -->
-        <div class="section">            
-            <p id="resultOutput">Das Ergebnis erscheint hier.</p>
-        </div>
+        
     </div>
 
     <script>

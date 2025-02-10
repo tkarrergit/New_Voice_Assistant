@@ -3,6 +3,7 @@ import hugchat_function_new as hfn
 import requests 
 import sqlite3
 
+#Testzugang
 email="huggchat@proton.me"
 passwd = "Huggchat55%"
 new_conversation, chatbot = hfn.hugchat_initialize_no_assistant(email, passwd)

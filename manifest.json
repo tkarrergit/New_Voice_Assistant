@@ -1,13 +1,10 @@
 {
-    "name": "Meine PWA",
-    "short_name": "PWA",
-    "start_url": "/index.html",
-    "display": "standalone",
-    "icons": [
-      {
-        "src": "icon.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      }
-    ]
-  }
+  "name": "New_Voice_Assistant",
+  "short_name": "New_Voice_Assistant",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "description": "Die Neuauflage des Adaptable_Console_Voice_Assistant"
+  
+}

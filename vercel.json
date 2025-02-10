@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "Flask_Server.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/manifest.json",
+        "destination": "/public/manifest.json"
+      },
+      {
+        "source": "/(.*)",
+        "destination": "/Flask_Server.py"
+      }
+    ]
+  }
+  
