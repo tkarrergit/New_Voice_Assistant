@@ -2,11 +2,26 @@ from flask import Flask, render_template, request, jsonify
 import hugchat_function_new as hfn
 import requests 
 import sqlite3
+import time
+from hugchat.exceptions import ModelOverloadedError
 
 #Testzugang
 email="huggchat@proton.me"
 passwd = "Huggchat55%"
-new_conversation, chatbot = hfn.hugchat_initialize_no_assistant(email, passwd)
+
+
+def get_response_with_retry(retries=3):
+    for attempt in range(retries):
+        try:
+            new_conversation, chatbot = hfn.hugchat_initialize_no_assistant(email, passwd)
+            return new_conversation, chatbot
+        except ModelOverloadedError:
+            print(f"Modell überlastet, neuer Versuch in 5 Sekunden (Versuch {attempt + 1} von {retries})...")
+            time.sleep(5)
+    print("Fehlgeschlagen nach mehreren Versuchen.")
+    return "Das Modell ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut."
+
+new_conversation, chatbot = get_response_with_retry(retries=3)
 
 app = Flask(__name__)
 

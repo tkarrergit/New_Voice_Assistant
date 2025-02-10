@@ -82,7 +82,7 @@ def hugchat_assistent(chatbot, user_input, new_conversation):
         antwort = "Leider keinen Input erkannt"
         return antwort 
 
-
+"""
 email="sand.burg@mail.de"
 passwd = "Heckmeck16!"
 input_text = "Hallo wie heißt dein llm Modell?"
@@ -94,4 +94,4 @@ antwort_str: str = antwort.wait_until_done()
 
 #antwort = hugchat_assistent(chatbot, input_text, new_conversation)
 result = str(antwort_str)
-print(result)
+print(result)"""
